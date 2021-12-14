@@ -1,6 +1,6 @@
 import useGameState from "./useGameState";
 
-function calculateWinner(squares : any) {
+function calculateWinner(squares: any) {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -20,7 +20,8 @@ function calculateWinner(squares : any) {
   return null;
 }
 
-function Square({ id, value, onClick } : any) {
+function Square({ id, value, onClick }: any) {
+
   return (
     <button data-testid={`square-${id}`} className="square" onClick={onClick}>
       {value}
@@ -28,8 +29,10 @@ function Square({ id, value, onClick } : any) {
   );
 }
 
-const Board = ({ squares, onSquareClick } : any) => {
+const Board = ({ squares, onSquareClick }: any) => {
+
   const renderSquare = (squareId: number) => {
+
     return (
       <Square
         id={squareId}
@@ -65,7 +68,8 @@ const Game: React.FC = () => {
     currentBoard,
     stepNumber,
     nextPlayer,
-    computeMove
+    computeMove,
+    onResetClick,
   } = useGameState();
 
   const handleSquareClick = (squareId: number) => {
@@ -73,8 +77,23 @@ const Game: React.FC = () => {
       // Game over or square already handled
       return;
     }
+
     computeMove(nextPlayer, squareId);
   };
+
+  const ResetButton = () => {
+    let winner: any = calculateWinner(currentBoard);
+
+    if(winner != null || stepNumber === 9){
+
+      return <button onClick={() => onResetClick()}> Reiniciar a partida</button >
+    }else{
+
+      return <button disabled title='Termine a partida para poder recomeçar'>Termine a partida para poder recomeçar</button >;
+    }
+    
+
+  }
 
   const renderStatusMessage = () => {
     const winner = calculateWinner(currentBoard);
@@ -102,6 +121,7 @@ const Game: React.FC = () => {
         <div className="game-info">
           <div>Current step: {stepNumber}</div>
           <div>{renderStatusMessage()}</div>
+          <div><ResetButton /></div>
         </div>
       </div>
     </>
